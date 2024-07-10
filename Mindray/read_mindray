@@ -1,0 +1,74 @@
+"""  author: Mahad
+     this script reads ecg file stored in xml format from Mindray and plots the graph of the signal 
+"""
+
+
+import xml.etree.ElementTree as ET
+import matplotlib.pyplot as plt
+import numpy as np
+import base64
+
+#parse xml
+
+file = "ABC1234_2021-09-27_21-53-39 Mindray file.txt"
+tree = ET.parse(file)
+root = tree.getroot()
+
+for elements in root:
+	print(elements)
+	for element in elements:
+		print(element)
+		
+
+def print_structure (element, level = 0):
+	indent = '-----|'*level
+	print(f"{indent}{element.tag}")
+	
+	for key, value in element.attrib.items():
+		print(f"{indent}	{key}:	{value}")
+	
+	for child in element:
+		print_structure(child, level+1)
+		
+
+print_structure(root)
+#extract data
+
+
+# Function to extract waveform data
+def extract_waveform_data(waveform_element):
+    data = []
+    for segment in waveform_element.findall('.//WaveformSegment'):
+        data_text = segment.find('Data').text
+        segment_data = list(map(int, data_text.split(',')))
+        data.extend(segment_data)
+    return data
+
+# Dictionary to hold the waveform data for each lead
+waveform_data = {}
+
+# Extract waveform data from TwelveLeadReport > Waveforms
+waveforms = root.findall('.//TwelveLeadReport//Waveform')
+
+for waveform in waveforms:
+    lead_type = waveform.attrib.get('Type')  # Correct attribute name
+    if lead_type not in waveform_data:
+        waveform_data[lead_type] = []
+    waveform_data[lead_type].extend(extract_waveform_data(waveform))
+
+# Print an overview of the data (first 10 samples for each lead)
+for lead_type, data in waveform_data.items():
+    print(f"Lead {lead_type}: First 10 samples: {data[:1000]}")
+
+# Plotting the waveform data
+num_leads = len(waveform_data)
+fig, axs = plt.subplots(num_leads, 1, figsize=(12, num_leads * 3))
+
+for i, (lead_type, data) in enumerate(waveform_data.items()):
+    axs[i].plot(data[:10000])  # Plotting first 500 samples for each lead
+    axs[i].set_title(f'ECG Lead {lead_type}')
+    axs[i].set_xlabel('Sample')
+    axs[i].set_ylabel('Amplitude (uV)')
+
+plt.tight_layout()
+plt.show()
