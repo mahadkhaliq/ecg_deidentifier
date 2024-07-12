@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>ECG De-identification</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='dropzone.min.css') }}">
+    <script src="{{ url_for('static', filename='dropzone.min.js') }}"></script>
+    <style>
+        /* Optional: CSS for button styles */
+        .file-button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin-bottom: 10px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>ECG De-identification Tool</h1>
+        <form method="POST" action="/" id="myForm">
+            <div class="form-group">
+                <label>Select Device:</label><br>
+                <input type="radio" id="mindray" name="device" value="mindray" required>
+                <label for="mindray">Mindray</label><br>
+                <input type="radio" id="philips" name="device" value="philips">
+                <label for="philips">Philips</label><br>
+                <input type="radio" id="mortara" name="device" value="mortara">
+                <label for="mortara">Mortara</label><br><br>
+            </div>
+            <div class="form-group">
+                <label for="input_folder">Input Folder Location:</label><br>
+                <input type="text" id="inputFolder" name="inputFolder" placeholder="Enter input folder path" required>
+            </div>
+            <div class="form-group">
+                <label for="output_folder">Output Folder Location:</label><br>
+                <input type="text" id="outputFolder" name="outputFolder" placeholder="Enter output folder path" required>
+            </div>
+            <input type="submit" value="Process Files" class="file-button">
+        </form>
+    </div>
+
+    <script>
+        // Optional: Add event listeners to handle file selection
+        document.getElementById('inputFile').addEventListener('change', function() {
+            console.log('Input file selected:', this.files[0]);
+        });
+
+        document.getElementById('outputFile').addEventListener('change', function() {
+            console.log('Output file selected:', this.files[0]);
+        });
+
+        document.getElementById('myForm').addEventListener('submit', function(event) {
+            event.preventDefault(); // Prevent form submission for demonstration
+            console.log('Form submitted.');
+            // Add logic to handle form submission and file processing here
+        });
+    </script>
+</body>
+</html>
