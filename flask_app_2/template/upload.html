@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title> ECG De-Identifier</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .container {
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            max-width: 400px;
+            width: 100%;
+        }
+
+        .container h1 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            color: #555;
+        }
+
+        .form-group input[type="file"],
+        .form-group input[type="radio"] {
+            width: 100%;
+        }
+
+        .form-group input[type="radio"] {
+            width: auto;
+        }
+
+        .form-group input[type="radio"] + label {
+            display: inline-block;
+            margin-left: 5px;
+            margin-right: 10px;
+            color: #555;
+        }
+
+        .form-group button {
+            width: 100%;
+            padding: 10px;
+            background-color: #4CAF50;
+            border: none;
+            border-radius: 4px;
+            color: #fff;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        .form-group button:hover {
+            background-color: #45a049;
+        }
+
+        #download_link {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        #download_link a {
+            display: inline-block;
+            padding: 10px 15px;
+            background-color: #008CBA;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+
+        #download_link a:hover {
+            background-color: #007B9E;
+        }
+
+        .file-count {
+            font-size: 14px;
+            color: #888;
+            margin-top: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>ECG De-Identifier</h1>
+        <h2>Upload Files</h2>
+        <form action="/upload" method="POST" enctype="multipart/form-data" id="uploadForm">
+            <div class="form-group">
+                <label for="file">Files:</label>
+                <input type="file" id="file" name="file" webkitdirectory directory multiple onchange="updateFileCount()">
+                <div class="file-count" id="fileCount">Total files: 0</div>
+            </div>
+            <div class="form-group">
+                <label>Select Device:</label><br>
+                <input type="radio" id="philips" name="device" value="Philips">
+                <label for="philips">Philips</label>
+                <input type="radio" id="mortara" name="device" value="Mortara">
+                <label for="mortara">Mortara</label>
+                <input type="radio" id="mindray" name="device" value="Mindray">
+                <label for="mindray">Mindray</label>
+            </div>
+            <div class="form-group">
+                <button type="submit">Upload</button>
+            </div>
+        </form>
+        <div id="download_link" style="display: none;">
+            <a id="download_button" href="#" download>Download Processed Files</a>
+        </div>
+    </div>
+
+    <script>
+        function updateFileCount() {
+            const input = document.getElementById('file');
+            const fileCount = document.getElementById('fileCount');
+            let txtFileCount = 0;
+    
+            if (input.files) {
+                for (let i = 0; i < input.files.length; i++) {
+                    const file = input.files[i];
+                    if (file.name.toLowerCase().endsWith('.txt')) {
+                        txtFileCount++;
+                    }
+                }
+                fileCount.textContent = `Total .txt files: ${txtFileCount}`;
+            } else {
+                fileCount.textContent = 'Total .txt files: 0';
+            }
+        }
+    </script>
+    
+</body>
+</html>
